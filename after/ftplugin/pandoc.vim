@@ -1,20 +1,32 @@
+if ( exists('g:loaded_paniki') && g:loaded_paniki ) || &cp
+  finish
+endif
 
-nnoremap <CR> :call <SID>OpenLinkUnderCursor()<CR>
+let g:loaded_paniki = 1
 
 function! s:OpenLinkUnderCursor()
   let link = s:getLink()
-  " if link does not start with any scheme http://, file://, it is treated as a wiki link.
-  if link =~ 'http://\|file://\|https://'
-    execute '!xdg-open ' . link . '&'
-  else
+  if link =~ '\(\(http\|https\|ftp\)://\)\|\(mailto:\)'
+    silent execute '!xdg-open "' . link . '"&'
+  elseif link =~ 'file://'
+    " strip 'file://'-prefix and expand filename 
+    let link = expand(strpart(link,7))
+    silent execute '!xdg-open "' .link . '"&'
+  elseif link != ''
     let directory = expand("%:p:h") . "/"
-    execute "edit " . link
+    silent execute "edit " . link . ".pdc"
   endif
 endfunction
 
 function! s:getLink()
   let stack = synstack(line("."), col("."))
   let matches = []
+
+  " Catch case where the cursor is at the very last paranthesis of the link.
+  if synIDattr(stack[0], "name") == "Operator"
+    let stack = synstack(line("."), col(".")-1)
+  endif
+
   if synIDattr(stack[0], "name") == "pandocReferenceLabel"
     " match next ](
     let [lnum,cnum] = searchpos( '\](', 'cnW', line('.') )
@@ -33,4 +45,6 @@ function! s:getLink()
     return ''
   endif
 endfunction
+
+au Syntax pandoc nnoremap <buffer> <silent> <CR> :call <SID>OpenLinkUnderCursor()<CR>
 
