@@ -16,10 +16,11 @@ function! s:getLink()
   let stack = synstack(line("."), col("."))
   let matches = []
   if synIDattr(stack[0], "name") == "pandocReferenceLabel"
-    " match next occurence of ]
+    " match next ](
     let [lnum,cnum] = searchpos( '\](', 'cnW', line('.') )
     let matches = matchlist( getline('.'), '(\s*\([^) "]*\)\s*\()\|"\)', cnum )
   elseif synIDattr(stack[0], "name") == "pandocReferenceURL"
+    " match previous ](
     let [lnum,cnum] = searchpos( '\](', 'bcnW', line('.') )
     let matches = matchlist( getline('.'), '(\s*\([^) "]*\)\s*\()\|"\)', cnum )
   else
