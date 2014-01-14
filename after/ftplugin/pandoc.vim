@@ -20,6 +20,9 @@ endfunction
 
 function! s:getLink()
   let stack = synstack(line("."), col("."))
+  if len(stack) < 1
+    return ''
+  endif
   let matches = []
 
   " Catch case where the cursor is at the very last paranthesis of the link.
