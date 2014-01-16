@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+
+from pandocfilters import toJSONFilter, Link
+import re
+
+def wikiLinks( key, value, format, meta ):
+  if key == 'Link':
+    [text, [url,title]] = value
+    if re.match( '^((http|https|ftp|file)://)|(mailto:)', url ) == None:
+      url = 'html/' + url + '.html'
+    return Link( text, [url, title] )
+
+if __name__ == "__main__":
+  toJSONFilter(wikiLinks)
+
