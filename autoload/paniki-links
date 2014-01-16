@@ -7,7 +7,7 @@ def wikiLinks( key, value, format, meta ):
   if key == 'Link':
     [text, [url,title]] = value
     if re.match( '^((http|https|ftp|file)://)|(mailto:)', url ) == None:
-      url = 'html/' + url + '.html'
+      url = url + '.html'
     return Link( text, [url, title] )
 
 if __name__ == "__main__":

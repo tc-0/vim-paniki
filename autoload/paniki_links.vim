@@ -1,6 +1,8 @@
 
+let g:paniki_filter_dir = expand('<sfile>:p:h') . '/paniki-links'
+
 function paniki_links#LinkFilter()
-  return expand('<sfile>:p:h') . '/paniki-links'
+  return g:paniki_filter_dir
 endfunction
 
 function paniki_links#OpenLinkUnderCursor()
