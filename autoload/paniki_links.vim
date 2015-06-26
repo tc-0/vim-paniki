@@ -14,7 +14,7 @@ function paniki_links#OpenLinkUnderCursor()
     let link = expand(strpart(link,7))
     silent execute '!xdg-open "' .link . '"&'
   elseif link != ''
-    silent execute "edit ". expand("%:p:h") . "/" . link . ".pdc"
+    silent execute "edit ". expand("%:p:h") . "/" . link
   endif
 endfunction
 
