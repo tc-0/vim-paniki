@@ -19,26 +19,41 @@ function paniki_links#OpenLinkUnderCursor()
 endfunction
 
 function! paniki_links#getLink()
-  let stack = synstack(line("."), col("."))
-  if len(stack) < 1
+  let stack = map(synstack(line("."), col(".")), 'synIDattr(v:val, "name")')
+
+  let i = max( [
+        \ index(stack, "pandocReferenceLabel"),
+        \ index(stack, "pandocReferenceURL"),
+        \ index(stack, "Operator")
+        \ ] )
+  if i == -1
     return ''
   endif
-  let matches = []
 
-  " Catch case where the cursor is at the very last paranthesis of the link.
-  if synIDattr(stack[0], "name") == "Operator"
-    let stack = synstack(line("."), col(".")-1)
+  if stack[i] == "Operator"
+    " might happen, when on a closing bracket
+    let stack = map(synstack(line("."), col(".")), 'synIDattr(v:val, "name")')
+    let i = max( [
+          \ index(stack, "pandocReferenceLabel"),
+          \ index(stack, "pandocReferenceURL"),
+          \ ] )
+    if i == -1
+      return ''
+    endif
   endif
 
-  if synIDattr(stack[0], "name") == "pandocReferenceLabel"
+  let matches = []
+
+  if stack[i] == "pandocReferenceLabel"
     " match next ](
     let [lnum,cnum] = searchpos( '\](', 'cnW', line('.') )
     let matches = matchlist( getline('.'), '(\s*\([^) "]*\)\s*\()\|"\)', cnum )
-  elseif synIDattr(stack[0], "name") == "pandocReferenceURL"
+  elseif stack[i] == "pandocReferenceURL"
     " match previous ](
     let [lnum,cnum] = searchpos( '\](', 'bcnW', line('.') )
     let matches = matchlist( getline('.'), '(\s*\([^) "]*\)\s*\()\|"\)', cnum )
   else
+    " should not happen?!
     return ''
   endif
   if len(matches) >= 1
