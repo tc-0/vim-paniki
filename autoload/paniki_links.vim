@@ -14,6 +14,9 @@ function paniki_links#OpenLinkUnderCursor()
     let link = expand(strpart(link,7))
     silent execute '!xdg-open "' .link . '"&'
   elseif link != ''
+    if exists('+modified') && exists('+modifiable') && g:paniki_autowrite != 0
+      silent execute "write"
+    endif
     silent execute "edit ". expand("%:p:h") . "/" . link
   endif
 endfunction
