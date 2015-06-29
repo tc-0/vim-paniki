@@ -17,7 +17,7 @@ function paniki_links#OpenLinkUnderCursor( editcmd )
     if exists('+modified') && exists('+modifiable') && g:paniki_autowrite != 0
       silent execute "write"
     endif
-    if a:editcmd != 'split' || a:editcmd != 'edit'
+    if a:editcmd != 'split' && a:editcmd != 'edit'
       echoerr 'editcmd should be either "split" or "edit".'
     endif
     if a:editcmd == 'edit'
