@@ -22,7 +22,7 @@ function paniki_links#OpenLinkUnderCursor( editcmd )
     endif
     if a:editcmd == 'edit'
       if exists('w:paniki_link_stack')
-        add(w:paniki_link_stack, expand("%:p"))
+        let w:paniki_link_stack = add(w:paniki_link_stack, expand("%:p"))
       else
         let w:paniki_link_stack = [expand("%:p")]
       endif
