@@ -5,7 +5,7 @@ function paniki_links#LinkFilter()
   return g:paniki_filter_dir
 endfunction
 
-function paniki_links#OpenLinkUnderCursor()
+function paniki_links#OpenLinkUnderCursor( editcmd )
   let link = paniki_links#getLink()
   if link =~ '\(\(http\|https\|ftp\)://\)\|\(mailto:\)'
     silent execute '!xdg-open "' . link . '"&'
@@ -17,7 +17,27 @@ function paniki_links#OpenLinkUnderCursor()
     if exists('+modified') && exists('+modifiable') && g:paniki_autowrite != 0
       silent execute "write"
     endif
-    silent execute "edit ". expand("%:p:h") . "/" . link
+    if a:editcmd != 'split' || a:editcmd != 'edit'
+      echoerr 'editcmd should be either "split" or "edit".'
+    endif
+    if a:editcmd == 'edit'
+      if exists('w:paniki_link_stack')
+        add(w:paniki_link_stack, expand("%:p"))
+      else
+        w:paniki_link_stack = [expand("%:p")]
+      endif
+    endif
+    silent execute a:editcmd . " " . expand("%:p:h") . "/" . link
+  endif
+endfunction
+
+function paniki_links#BackLink()
+  if exists('w:paniki_link_stack')
+    let prev = remove(w:paniki_link_stack, -1)
+    if exists('+modified') && exists('+modifiable') && g:paniki_autowrite != 0
+      silent execute "write"
+    endif
+    silent execute "edit " . prev
   endif
 endfunction
 
