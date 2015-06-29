@@ -32,7 +32,7 @@ function paniki_links#OpenLinkUnderCursor( editcmd )
 endfunction
 
 function paniki_links#BackLink()
-  if exists('w:paniki_link_stack')
+  if exists('w:paniki_link_stack') && len(w:paniki_link_stack) > 0
     let prev = remove(w:paniki_link_stack, -1)
     if exists('+modified') && exists('+modifiable') && g:paniki_autowrite != 0
       silent execute "write"
