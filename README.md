@@ -1,3 +1,6 @@
+**This project is obsolete as better functionality can now be found in
+[vim-pandoc](https://github.com/vim-pandoc/vim-pandoc) itself.**
+
 # vim-paniki
 
 Enable clickable links in pandoc for personal wiki.
@@ -10,7 +13,7 @@ Enable clickable links in pandoc for personal wiki.
 
 * `<BS>`, i.e. backspace, opens the previous file that was edited in the current window before following a link.
 
-* `<localleader>wh` converts the current file to HTML. This is probably broken.
+* `<localleader>wh` converts the current file to HTML. This is broken.
 ## Configuration
 
 There is currently only one option, `g:paniki_autowrite`. If `g:paniki_autowrite` is nonzero, `vim-paniki` will automatically save modified files when following a link or returning from a link.
